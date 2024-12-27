@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "notify"
+version = "0.1.0"
+description = "A simple notification system based with FCM and FastAPI"
+authors = ["flavien-hugs <flavienhugs@pm.me>"]
+packages = [{ include = "src" }]
+
+[tool.poetry.dependencies]
+python = "3.12.3"
+pydantic-settings = "2.5.2"
+uvloop = "0.20.0"
+fastapi = {version = "0.115.0", extras = ["standard"]}
+firebase-admin = "^6.6.0"
+
+
+[tool.poetry.scripts]
+app = 'src.run:app'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
