@@ -1,0 +1,6 @@
+[run]
+include =
+    */src/*
+omit =
+    */tests/*
+    */src/common/*

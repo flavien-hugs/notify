@@ -6,16 +6,14 @@ from src.config import settings
 app = typer.Typer(pretty_exceptions_enable=True)
 
 
-@app.command(name="Run app server")
-def run_app():
+@app.command(name="runserver")
+def run():
     uvicorn.run(
         app="src.main:app",
         host=settings.APP_HOSTNAME,
-        port=settings.APP_DEFAULT_PORT,
-        reload=settings.APP_RELOAD,
-        log_level=settings.APP_LOG_LEVEL,
-        access_log=settings.APP_ACCESS_LOG,
+        port=settings.APP_PORT,
         loop=settings.APP_LOOP,
+        reload=False if settings.APP_ENVIRONMENT != "dev" else True,
     )
 
 
