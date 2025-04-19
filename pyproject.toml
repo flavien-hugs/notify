@@ -11,6 +11,8 @@ pydantic-settings = "2.5.2"
 uvloop = "0.20.0"
 fastapi = {version = "0.115.0", extras = ["standard"]}
 firebase-admin = "6.6.0"
+beanie = "1.26.0"
+fastapi-pagination = "0.12.21"
 
 
 [tool.poetry.group.dev.dependencies]
