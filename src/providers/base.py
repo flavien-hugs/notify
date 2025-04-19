@@ -6,7 +6,14 @@ Class = Type[Any]
 
 class NotifyProvider(ABC):
     @abstractmethod
-    async def send(self, **kwargs: dict[str, Any]) -> dict:
+    async def send(self, model_klass: Class, **kwargs) -> dict:
+        """
+        Send notification
+
+        :param model_klass:
+        :param kwargs:
+        :return:
+        """
         raise NotImplementedError("")
 
     @abstractmethod
@@ -14,9 +21,9 @@ class NotifyProvider(ABC):
         raise NotImplementedError("")
 
     @abstractmethod
-    async def find(self) -> dict[str, Any]:
+    async def find(self, query: dict = None, sort: str = None) -> list:
         raise NotImplementedError("")
 
     @abstractmethod
-    async def find_one(self, sender_id: str) -> dict[str, Any]:
+    async def find_one(self, sender_id: str) -> dict:
         raise NotImplementedError("")

@@ -8,8 +8,7 @@ from src.endpoints import router
 
 
 @asynccontextmanager
-async def lifespan(instance: FastAPI):
-    ...
+async def lifespan(instance: FastAPI): ...
 
 
 app: FastAPI = FastAPI(
@@ -27,5 +26,6 @@ async def read_root():
 @app.get("/@ping", tags=["DEFAULT"], summary="Check if server is available")
 async def ping():
     return {"message": "pong !"}
+
 
 app.include_router(router)
