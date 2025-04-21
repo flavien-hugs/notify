@@ -172,3 +172,4 @@ k8s/secrets.yml
 notebook.ipynb
 dotenv/
 .idea/
+compose.local.yaml

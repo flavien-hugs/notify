@@ -4,6 +4,9 @@ from typing import Optional
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
+from dotenv import load_dotenv
+load_dotenv(".env")
+
 
 class NotifyBaseConfig(BaseSettings):
     # APPLICATION CONFIGURATION
@@ -26,6 +29,12 @@ class NotifyBaseConfig(BaseSettings):
         description="The environment where the application is running (staging, preprod, prod, dev)",
     )
 
+    # PROVIDER CONFIG
+    NOTIFY_SMS_PROVIDER_CLASS: str = Field(
+        default="src.providers.sms.SMSProvider",
+        alias="NOTIFY_SMS_PROVIDER_CLASS",
+        description="The class of the notify provider",
+    )
     NOTIFY_EMAIL_PROVIDER_CLASS: str = Field(
         default="src.providers.email.SMTPProvider",
         alias="NOTIFY_PROVIDER_CLASS",
