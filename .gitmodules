@@ -1,0 +1,4 @@
+[submodule "src/common"]
+	path = src/common
+	url = git@github.com:flavien-hugs/common.git
+	branch = main

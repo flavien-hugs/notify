@@ -1,17 +1,18 @@
 from datetime import datetime, UTC
+from typing import Any, Dict, Literal, Optional
 
 import pymongo
 from beanie import Document
-from dotenv.variables import Literal
 from pydantic import Field
 
 from src.config import settings
 
 
 class Notify(Document):
-    status: Literal["pending", "successful", "failed"] = Field(default="pending")
-    notify_type: Literal["sms", "email", "push"] = Field(default="email")
-    created_at: datetime = Field(default=datetime.now(UTC))
+    notify_type: Literal["sms", "email", "push"] = Field(default=None)
+    status: Literal["pending", "successful", "failed"] = Field(default=None)
+    data: Optional[Dict[str, Any]] = Field(default=dict)
+    created_at: Optional[datetime] = Field(default=datetime.now(UTC))
 
     class Settings:
         use_revision = True

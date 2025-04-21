@@ -95,7 +95,7 @@ class SMTPProvider(NotifyProvider):
                 smtp.send_message(msg=msg, from_addr=from_addr, to_addrs=all_recipients)
 
                 response = {
-                    "status": "success",
+                    "status": "successful",
                     "recipients": len(all_recipients),
                 }
                 logger.info(f"Email sent to {len(recipients)} recipients")
@@ -105,6 +105,10 @@ class SMTPProvider(NotifyProvider):
             raise EmailSentFailed(f"Email sending failed: {exc}")
 
         await model_klass(**kwargs).create() if model_klass else ""
+
+        # Save to database in model class provided
+        data = {"from_addr": from_addr, "to": ", ".join(recipients), "msg": msg}
+        await model_klass(status="successful", notify_type="sms", data=data).create()
 
         return response
 
