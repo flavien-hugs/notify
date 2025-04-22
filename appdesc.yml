@@ -1,0 +1,11 @@
+- app:
+    name: "notify"
+    title:
+        fr: "Service de gestion des notification"
+        en: "Notify service "
+    permissions:
+        -
+            code: "notify:can-send"
+            desc:
+                fr: "Peut envoyer des notifications"
+                en: "Can send notification"

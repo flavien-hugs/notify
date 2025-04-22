@@ -60,7 +60,7 @@ ARG GID=10001
 COPY --from=builder-base ${POETRY_HOME} ${POETRY_HOME}
 COPY --from=builder-base ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=builder-base /app/src /app/src
- COPY --from=builder-base /app/appdesc.yml /app/appdesc.yml
+COPY --from=builder-base /app/appdesc.yml /app/appdesc.yml
 COPY --from=builder-base /app/pyproject.toml /app/pyproject.toml
 COPY --from=builder-base /app/poetry.lock /app/poetry.lock
 

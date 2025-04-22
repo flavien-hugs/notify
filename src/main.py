@@ -2,19 +2,20 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi_pagination import add_pagination
 
-from src.config import settings, shutdown_handler, startup_handler
+from src.common.config.setup_permission import __load_app_description, BASE_DIR
 from src.common.helpers.exception import setup_exception_handlers
+from src.config import settings, shutdown_handler, startup_handler
 from src.endpoints import router
 from src.models import Notify
-from fastapi_pagination import add_pagination
 
 
 @asynccontextmanager
-async def lifespan(instance: FastAPI):
-    await startup_handler(instance, [Notify])
+async def lifespan(app: FastAPI):
+    await startup_handler(app, [Notify])
     yield
-    await shutdown_handler(instance)
+    await shutdown_handler(app)
 
 
 app: FastAPI = FastAPI(
@@ -35,6 +36,19 @@ async def ping():
     return {"message": "pong !"}
 
 
-app.include_router(router)
+@app.get(
+    "/_permissions",
+    response_model=dict,
+    summary="Get app description and permissions",
+    status_code=200,
+    include_in_schema=False,
+)
+async def read_permissions() -> dict:
+    filepath = BASE_DIR / "appdesc.yml"
+    data = await __load_app_description(filepath)
+    return data[0]
+
+
 add_pagination(app)
+app.include_router(router=router)
 setup_exception_handlers(app)

@@ -4,11 +4,15 @@ from typing import Optional
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from dotenv import load_dotenv
-load_dotenv(".env")
+# from dotenv import load_dotenv
+# load_dotenv(".env")
 
 
 class NotifyBaseConfig(BaseSettings):
+    # CONSUL CONFIG
+    CONSUL_HOST: str = Field(default="localhost", alias="CONSUL_HOST")
+    CONSUL_PORT: int = Field(default=8500, alias="CONSUL_PORT")
+
     # APPLICATION CONFIGURATION
     APP_NAME: Optional[str] = Field(default="notify", alias="APP_NAME", description="Name of the application")
     APP_TITLE: Optional[str] = Field(default="UNSTA: Notify System", alias="APP_TITLE", description="Title of the application")

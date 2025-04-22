@@ -1,10 +1,10 @@
 from typing import Literal, Union
 
-from fastapi import APIRouter, Body, Query, status, Depends
-from fastapi_pagination.ext.beanie import paginate
+from fastapi import APIRouter, Body, Depends, Query, status
+from fastapi_pagination.ext.beanie import apaginate
 from pymongo import ASCENDING, DESCENDING
 
-from src.common.helpers.pagination import customize_page
+from src.common.helpers.pagination import CustomPage
 from src.config import settings
 from src.models import Notify
 from src.schemas import EmailPayload, FilterNotify, SMSPayload
@@ -17,23 +17,7 @@ router = APIRouter(
 )
 
 
-@router.get("/notifications", response_model=customize_page(Notify), status_code=status.HTTP_200_OK)
-async def read_all(filter: FilterNotify = Depends(FilterNotify), sort: Literal["desc", "asc"] = Query(default=None)):
-    search = filter.model_dump(exclude_unset=True)
-
-    if filter.notify_type:
-        search.update({"notify_type": filter.notify_type})
-
-    if filter.status:
-        search.update({"status": filter.status})
-
-    sorted = DESCENDING if sort == desc else ASCENDING
-    cursor = Notify.find(search, sort=[("created_at", sorted)])
-
-    return await paginate(cursor)
-
-
-@router.post("/send", response_model=Notify, summary="Send Message", status_code=status.HTTP_200_OK)
+@router.post("/send", response_model=Notify, summary="Send Message", status_code=status.HTTP_202_ACCEPTED)
 async def send(type: Literal["sms", "email", "push"], payload: Union[SMSPayload, EmailPayload] = Body(...)):
     match type:
         case value if value == "email":
@@ -46,3 +30,27 @@ async def send(type: Literal["sms", "email", "push"], payload: Union[SMSPayload,
             return None
         case _:
             return None
+
+
+@router.get(
+    "/notifications",
+    summary="Read all notify",
+    response_model_exclude={"data"},
+    response_model=CustomPage[Notify],
+    status_code=status.HTTP_200_OK
+)
+async def read(
+        filter: FilterNotify = Depends(FilterNotify),
+        sort: Literal["desc", "asc"] = Query(default=None)
+):
+    search = filter.model_dump(exclude_none=True)
+
+    if filter.notify_type:
+        search.update({"notify_type": filter.notify_type})
+
+    if filter.status:
+        search.update({"status": filter.status})
+
+    sorted = DESCENDING if sort == "desc" else ASCENDING
+    query = Notify.find(search, sort=[("created_at", sorted)])
+    return await apaginate(query=query)
